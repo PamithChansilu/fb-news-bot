@@ -1,0 +1,17 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Facebook News Bot — Python Dependencies
+# Install with:  pip install -r requirements.txt
+# ─────────────────────────────────────────────────────────────────────────────
+
+# RSS feed parsing
+feedparser==6.0.11
+
+# HTTP requests
+requests==2.32.3
+
+# Full article text + image extraction (optional but recommended)
+newspaper3k==0.2.8
+lxml[html_clean]
+
+# Job scheduling
+schedule==1.2.2
