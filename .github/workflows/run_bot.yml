@@ -1,0 +1,45 @@
+name: Facebook News Bot
+
+on:
+  schedule:
+    - cron: "0 * * * *"
+  workflow_dispatch:
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Restore database cache
+        uses: actions/cache@v4
+        with:
+          path: posted_articles.db
+          key: posted-articles-db-${{ github.run_id }}
+          restore-keys: |
+            posted-articles-db-
+
+      - name: Run bot
+        env:
+          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
+          FB_ACCESS_TOKEN: ${{ secrets.FB_ACCESS_TOKEN }}
+        run: python main_once.py
+
+      - name: Upload bot log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bot-log-${{ github.run_id }}
+          path: bot.log
+          retention-days: 7
